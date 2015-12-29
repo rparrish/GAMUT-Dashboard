@@ -4,5 +4,6 @@
 
 Data/
 *.html
+*.dcf
 
 MySQL_config.R
