@@ -10,18 +10,22 @@ library(qicharts)
 library(DBI)
 library(dplyr)
 
+# Connect to MySQL database
+# http://stackoverflow.com/questions/24948549/access-local-mysql-server-with-shiny-io
+
 source("MySQL_config.R")
 
 con <-  dbConnect(RMySQL::MySQL(), 
-                  username = mysql_username, 
-                  password = mysql_password,
-                  host = mysql_host, 
+                  username = .mysql_username, 
+                  password = .mysql_password,
+                  host = .mysql_host, 
                   port = 3306, 
-                  dbname = mysql_dbname
+                  dbname = .mysql_dbname
 )
 
 mydata <- 
     dbGetQuery(con, "SELECT * FROM monthly_data;")
+
 dbDisconnect(con)
 
 
