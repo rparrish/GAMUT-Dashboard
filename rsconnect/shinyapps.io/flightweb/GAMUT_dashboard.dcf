@@ -2,9 +2,9 @@ name: GAMUT_dashboard
 account: flightweb
 server: shinyapps.io
 appId: 75925
-bundleId: 340627
+bundleId: 340629
 url: https://flightweb.shinyapps.io/GAMUT_dashboard
-when: 1451415700.3921
+when: 1451415966.40722
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: LICENSE|README.html|README.md
