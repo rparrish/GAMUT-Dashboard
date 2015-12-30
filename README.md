@@ -7,7 +7,7 @@ https://flightweb.shinyapps.io/GAMUT_dashboard
 
 ## Roadmap
 
- - [ ] Initial Prototype
+ - [x] Initial Prototype
  - [ ] ETCo2 Monitoring 
  - [ ] All metrics
  - [ ] Individual programs
