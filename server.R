@@ -33,25 +33,26 @@ dbDisconnect(con)
 
 mydata_agg <- 
     mydata %>%
-    select(month, total_patients:unintended_hypothermia) %>%
+    select(month,  total_patients:unintended_hypothermia) %>%
     group_by(month) %>%
-    summarise_each(funs(sum)) %>%
+    summarise_each(funs(sum(., na.rm = TRUE))) %>%
     data.frame()
     
-   
 shinyServer(function(input, output) {
+# metric columns 
 
-  output$distPlot <- renderPlot({
-
-    # generate bins based on input$bins from ui.R
-    x    <- mydata_agg[, "total_patients"]
-    #bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-    # draw the histogram with the specified number of bins
-    # hist(x, breaks = bins, col = 'darkgray', border = 'white')
-    tcc(n = x, 
-        x = mydata_agg[, "month"],
-        main = "Run chart of GAMUT volumes by month - all patient contacts"
+  output$runchart <- renderPlot({
+    metric_column <- switch(input$metric_name, 
+                            `Total Patients` = mydata_agg$total_patients, 
+                            `Total Neonatal Patients` = mydata_agg$total_neo_patients,
+                            `Total Pediatric Patients` = mydata_agg$total_peds_patients,
+                            `Total Adult Patients` = mydata_agg$total_adult_patients
+                        )
+  # filter by data access group 
+    
+    qic(y = metric_column, 
+        x = mydata_agg$month,
+        main = paste(input$metric_name, " by month")
         )
   })
 
