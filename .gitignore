@@ -6,4 +6,5 @@ Data/
 *.html
 *.dcf
 
-MySQL_config.R
+R/MySQL_config.R
+R/.REDCap_config.R
