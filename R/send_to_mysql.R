@@ -85,7 +85,13 @@ send_to_mysql <- function() {
         value = data.frame(metadata),
         overwrite = TRUE
     )
-    
+    dbWriteTable(
+        conn,
+        name = "monthly_data",
+        value = data.frame(monthly_data),
+        overwrite = TRUE
+    )
+     
     dbDisconnect(conn)
     
     
