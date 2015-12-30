@@ -39,6 +39,19 @@ mydata_agg <-
     data.frame()
     
 shinyServer(function(input, output) {
+    
+# counts
+    total_count <- reactive({
+        a <- switch(input$metric_name, 
+                            `Total Patients` = sum(mydata_agg$total_patients), 
+                            `Total Neonatal Patients` = sum(mydata_agg$total_neo_patients),
+                            `Total Pediatric Patients` = sum(mydata_agg$total_peds_patients),
+                            `Total Adult Patients` = sum(mydata_agg$total_adult_patients)
+                        ) 
+        a
+         
+    })
+    
 # metric columns 
 
   output$runchart <- renderPlot({
@@ -54,6 +67,11 @@ shinyServer(function(input, output) {
         x = mydata_agg$month,
         main = paste(input$metric_name, " by month")
         )
-  })
+  }) # end runchart
+  
+  output$total_count <- renderInfoBox(
+      infoBox(title = "Total Patients", 
+              value = total_count())
+  ) # end total count
 
 })

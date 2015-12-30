@@ -61,7 +61,8 @@ dashboardPage(
                 tabName = "graph_runchart", 
         fluidRow(
             # A static infoBox
-            infoBox("Participants", 10 * 2, icon = icon("dashboard")),
+            #infoBox("Participants", 10 * 2, icon = icon("dashboard")),
+            infoBoxOutput("total_count"),
             infoBox("Average", 10 * 2, icon = icon("star-half-full")),
             infoBox("Benchmark", 10 * 2, icon = icon("flag-checkered"))
             # Dynamic infoBoxes
