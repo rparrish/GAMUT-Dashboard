@@ -74,8 +74,14 @@ shinyServer(function(input, output) {
   # filter by data access group 
     
     qic(y = metric_column, 
-        x = mydata_agg$month,
-        main = paste(input$metric_name, " by month")
+        x = format(as.Date(mydata_agg$month), "%b %Y"),
+        main = paste(input$metric_name, " by month"), 
+        xlab = "Time",
+        ylab = "Metric",
+        cex = 1.25,
+        las = 2
+        #sub = "subtitle"
+       # runvals = TRUE
         )
   }) # end runchart
   

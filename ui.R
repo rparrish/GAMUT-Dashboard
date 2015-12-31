@@ -69,7 +69,7 @@ dashboardPage(
             # Dynamic infoBoxes
         ),
         fluidRow(
-            box(title = "metric name",
+            box(title = "",
                 footer = "Testing data only",
                  shiny::plotOutput(outputId = "runchart", width='95%', height='400px'),
                 width = 12
