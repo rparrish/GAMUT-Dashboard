@@ -28,7 +28,8 @@ dashboardPage(
          selectInput(
             inputId = "metric_name",
             label = "GAMUT Metric",
-            choices = list("Total Patients", "Total Neonatal Patients", "Total Pediatric Patients", "Total Adult Patients"  
+            choices = list("Total Patients", "Total Neonatal Patients", "Total Pediatric Patients", "Total Adult Patients",
+                           "Neonatal Capnography", "Pediatric Capnography", "Adult Capnography"
                           # "First Intubation Success", "DASH-1a", "Hypothermia"
                            ),
             selectize = FALSE,
@@ -44,8 +45,8 @@ dashboardPage(
         HTML('<i class="fa fa-line-chart panelHeader"> Charts</i>'),
         sidebarMenu(
             menuItem("Runchart", tabName="graph_runchart"),
-            menuItem("Measure Information", tabName="information", icon = icon("book")),
-            menuItem("Links", tabName="general_links")
+            menuItem("Measure Definitions", tabName="information", icon = icon("book")),
+            menuItem("Resources", tabName="general_links")
         )
     ),
     dashboardBody(
@@ -67,9 +68,15 @@ dashboardPage(
             infoBox("Benchmark", 10 * 2, icon = icon("flag-checkered"))
             # Dynamic infoBoxes
         ),
-                 shiny::plotOutput(outputId = "runchart", width='95%', height='400px'), 
+        fluidRow(
+            box(title = "metric name",
+                footer = "Testing data only",
+                 shiny::plotOutput(outputId = "runchart", width='95%', height='400px'),
+                width = 12
+                 )
+            ), 
                 HTML("<font color='red'>{<em>Is there some explanatory text you'd like here?</em>}</font><br/>")
-                
+       
              ), 
              tabItem(
                 tabName = "information", 
@@ -87,10 +94,16 @@ dashboardPage(
             ), 
            tabItem(
                 tabName = "general_links", 
-                 HTML("<font color='red'>{<em>Is there some explanatory text you'd like here?</em>}</font><br/>"),
-                htmlOutput(outputId='redcap_outlooks'),
-                htmlOutput(outputId='table_file_info')
-            )
+                 tags$h4("Resources"),
+                HTML(
+                    "<br/>",
+                    "  <table>",
+                    "    <tr><td><A HREF=''>Shinyapps.io</A></td><td> - </td><td>Dashboard infrastructure and hosting</td></tr>",
+                    "    <tr><td><A HREF=''>qicharts</A></td><td> - </td><td>Generates runcharts and statistical process control charts. </td></tr>",
+                    "  </table>",
+                    "</font>"
+                )
+             )
         ) #End the tabsetPanel
     ) #End the dashboardBody
 ) #End the dashboardPage

@@ -13,7 +13,7 @@ library(dplyr)
 # Connect to MySQL database
 # http://stackoverflow.com/questions/24948549/access-local-mysql-server-with-shiny-io
 
-source("MySQL_config.R")
+source("R/MySQL_config.R")
 
 con <-  dbConnect(RMySQL::MySQL(), 
                   username = .mysql_username, 
@@ -43,6 +43,11 @@ shinyServer(function(input, output) {
 # counts
     total_count <- reactive({
         a <- switch(input$metric_name, 
+                    
+                            `Neonatal Capnography` = sum(mydata$neo_adv_airway_cases, na.rm = TRUE),
+                            `Pediatric Capnography` = sum(mydata$ped_adv_airway_cases, na.rm = TRUE),
+                            `Adult Capnography` = sum(mydata$adult_adv_airway_cases, na.rm = TRUE),
+                    
                             `Total Patients` = sum(mydata_agg$total_patients), 
                             `Total Neonatal Patients` = sum(mydata_agg$total_neo_patients),
                             `Total Pediatric Patients` = sum(mydata_agg$total_peds_patients),
@@ -55,7 +60,12 @@ shinyServer(function(input, output) {
 # metric columns 
 
   output$runchart <- renderPlot({
-    metric_column <- switch(input$metric_name, 
+    metric_column <- switch(input$metric_name,
+                            
+                            `Neonatal Capnography` = mydata_agg$neo_adv_airway_capno/mydata_agg$neo_adv_airway_cases, 
+                            `Pediatric Capnography` = mydata_agg$ped_adv_airway_capno/mydata_agg$ped_adv_airway_cases, 
+                            `Adult Capnography` = mydata_agg$adult_adv_airway_capno/mydata_agg$adult_adv_airway_cases, 
+                            
                             `Total Patients` = mydata_agg$total_patients, 
                             `Total Neonatal Patients` = mydata_agg$total_neo_patients,
                             `Total Pediatric Patients` = mydata_agg$total_peds_patients,
