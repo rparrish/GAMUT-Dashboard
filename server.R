@@ -33,19 +33,34 @@ dbDisconnect(con)
 
 mydata_agg <- 
     mydata %>%
-    select(month,  total_patients:unintended_hypothermia) %>%
+    select(month, total_patients:unintended_hypothermia) %>%
     group_by(month) %>%
     summarise_each(funs(sum(., na.rm = TRUE))) %>%
     data.frame()
     
 shinyServer(function(input, output) {
+
+# metric data ----------------------------
+metric_data <- reactive({
     
-# counts
+    mydata_agg %>%
+        filter(program_name == input$program_name)
+    
+})
+    
+    
+# counts ---------------------------------
     total_count <- reactive({
         a <- switch(input$metric_name, 
                     
-                            `Neonatal Capnography` = sum(mydata$neo_adv_airway_cases, na.rm = TRUE),
-                            `Pediatric Capnography` = sum(mydata$ped_adv_airway_cases, na.rm = TRUE),
+                    `Neonatal Capnography` = {list(
+                        patient_count = sum(mydata$neo_adv_airway_cases, na.rm = TRUE),
+                        program_count = "second", 
+                        benchmark = "benchmark"
+                        )},
+                            
+                    
+                    `Pediatric Capnography` = sum(mydata$ped_adv_airway_cases, na.rm = TRUE),
                             `Adult Capnography` = sum(mydata$adult_adv_airway_cases, na.rm = TRUE),
                     
                             `Total Patients` = sum(mydata_agg$total_patients), 
@@ -53,7 +68,13 @@ shinyServer(function(input, output) {
                             `Total Pediatric Patients` = sum(mydata_agg$total_peds_patients),
                             `Total Adult Patients` = sum(mydata_agg$total_adult_patients)
                         ) 
-        a
+        results <- list(
+            patient_count = a["patient_count"], 
+            program_count = a["program_count"], 
+            benchmark     = a["benchmark"]
+            ) 
+        
+        results
          
     })
     
@@ -85,9 +106,20 @@ shinyServer(function(input, output) {
         )
   }) # end runchart
   
-  output$total_count <- renderInfoBox(
+  output$patient_count <- renderInfoBox(
       infoBox(title = "Total Patients", 
-              value = total_count())
-  ) # end total count
+              value = total_count()$patient_count,
+              icon  = icon("dashboard"))
+  ) # end patient count
+
+  output$program_count <- renderInfoBox(
+      infoBox(title = "Total Programs", 
+              value = total_count()$program_count)
+  ) # end program count
+
+  output$benchmark <- renderInfoBox(
+      infoBox(title = "Benchmark", 
+              value = total_count()$benchmark)
+  ) # end benchmark
 
 })

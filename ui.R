@@ -61,12 +61,9 @@ dashboardPage(
              tabItem(
                 tabName = "graph_runchart", 
         fluidRow(
-            # A static infoBox
-            #infoBox("Participants", 10 * 2, icon = icon("dashboard")),
-            infoBoxOutput("total_count"),
-            infoBox("Average", 10 * 2, icon = icon("star-half-full")),
-            infoBox("Benchmark", 10 * 2, icon = icon("flag-checkered"))
-            # Dynamic infoBoxes
+            infoBoxOutput("patient_count"),
+            infoBoxOutput("program_count"),
+            infoBoxOutput("benchmark")
         ),
         fluidRow(
             box(title = "",
@@ -99,7 +96,7 @@ dashboardPage(
                     "<br/>",
                     "  <table>",
                     "    <tr><td><A HREF=''>Shinyapps.io</A></td><td> - </td><td>Dashboard infrastructure and hosting</td></tr>",
-                    "    <tr><td><A HREF=''>qicharts</A></td><td> - </td><td>Generates runcharts and statistical process control charts. </td></tr>",
+                    "    <tr><td><A HREF='https://cran.r-project.org/web/packages/qicharts/index.html'>qicharts</A></td><td> - </td><td>Generates runcharts and statistical process control charts. </td></tr>",
                     "  </table>",
                     "</font>"
                 )
