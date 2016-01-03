@@ -10,6 +10,15 @@ send_to_mysql <- function() {
     source("R/MySQL_config.R")
     source("R/.REDCap_config.R")
     
+    metric_details <- tbl_df(
+        redcap_read_oneshot(
+            redcap_uri = uri,
+            token = metric_details_token,
+            export_data_access_groups = FALSE,
+            raw_or_label = "label"
+        )$data
+    )
+     
     GAMUT_data <- tbl_df(
         redcap_read_oneshot(
             redcap_uri = uri,
@@ -18,8 +27,7 @@ send_to_mysql <- function() {
             raw_or_label = "label"
         )$data
     )
-    
-    AIM_data <- tbl_df(
+     AIM_data <- tbl_df(
         redcap_read_oneshot(
             redcap_uri = uri,
             token = AIM_token,
@@ -55,6 +63,12 @@ send_to_mysql <- function() {
     )
     
     
+    dbWriteTable(
+        conn,
+        name = "metric_details",
+        value = data.frame(GAMUT_data),
+        overwrite = TRUE
+    )
     dbWriteTable(
         conn,
         name = "GAMUT_data",
