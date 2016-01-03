@@ -18,18 +18,20 @@ dashboardPage(
     skin = "blue",
     header = header,
     dashboardSidebar(
-        HTML('<i class="fa fa-filter panelHeader"> Filters</i>'),
-        selectInput(
-            inputId = "program_name",
-            label = "Program Name",
-            choices = list("(please assign)", "Akron Childrens", "Cincinnati Childrens"),
-            selected = "All"
-        ),
+        #HTML('<i class="fa fa-filter panelHeader"> Filters</i>'),
+#         selectInput(
+#             inputId = "program_name",
+#             label = "Program Name",
+#             choices = list("Akron Childrens", "Cincinnati Childrens"),
+#             selectize = FALSE,
+#             selected = "All"
+#         ),
          selectInput(
             inputId = "metric_name",
             label = "GAMUT Metric",
-            choices = list("Total Patients", "Total Neonatal Patients", "Total Pediatric Patients", "Total Adult Patients",
-                           "Neonatal Capnography", "Pediatric Capnography", "Adult Capnography"
+            choices = list(
+                "Neonatal Capnography", "Pediatric Capnography", "Adult Capnography"
+                #"Total Patients", "Total Neonatal Patients", "Total Pediatric Patients", "Total Adult Patients"
                           # "First Intubation Success", "DASH-1a", "Hypothermia"
                            ),
             selectize = FALSE,
@@ -42,9 +44,9 @@ dashboardPage(
                      selected = "")
         ),
 
-        HTML('<i class="fa fa-line-chart panelHeader"> Charts</i>'),
+        #HTML('<i class="fa fa-line-chart panelHeader"> Charts</i>'),
         sidebarMenu(
-            menuItem("Runchart", tabName="graph_runchart"),
+            menuItem("Runchart", tabName="graph_runchart", icon = icon("line-chart")),
             menuItem("Measure Definitions", tabName="information", icon = icon("book")),
             menuItem("Resources", tabName="general_links")
         )
@@ -61,24 +63,26 @@ dashboardPage(
              tabItem(
                 tabName = "graph_runchart", 
         fluidRow(
-            # A static infoBox
-            #infoBox("Participants", 10 * 2, icon = icon("dashboard")),
-            infoBoxOutput("total_count"),
-            infoBox("Average", 10 * 2, icon = icon("star-half-full")),
-            infoBox("Benchmark", 10 * 2, icon = icon("flag-checkered"))
-            # Dynamic infoBoxes
+            #infoBoxOutput("patient_count"),
+            infoBoxOutput("average", width = 6),
+            infoBoxOutput("benchmark", width = 6)
         ),
         fluidRow(
-            box(title = "metric name",
-                footer = "Testing data only",
-                 shiny::plotOutput(outputId = "runchart", width='95%', height='400px'),
+#             box(title = "qic",
+#                 footer = "Testing data only",
+#                  shiny::plotOutput(outputId = "runchart", width='95%', height='400px'),
+#                 width = 6
+#                  ),
+             box(#title = textOutput("title"),
+                footer = textOutput("footer"),
+                 shiny::plotOutput(outputId = "tcc_runchart", width='95%', height='400px'),
                 width = 12
                  )
-            ), 
-                HTML("<font color='red'>{<em>Is there some explanatory text you'd like here?</em>}</font><br/>")
-       
-             ), 
-             tabItem(
+            ) 
+             # box( dataTableOutput("data_table"), width = 12 )
+             #   HTML("<font color='red'>{<em>Is there some explanatory text you'd like here?</em>}</font><br/>")  ), 
+             ),
+     tabItem(
                 tabName = "information", 
                 #DT::dataTableOutput(outputId = "ScheduleTableUpcoming"),
                 HTML(
@@ -99,11 +103,12 @@ dashboardPage(
                     "<br/>",
                     "  <table>",
                     "    <tr><td><A HREF=''>Shinyapps.io</A></td><td> - </td><td>Dashboard infrastructure and hosting</td></tr>",
-                    "    <tr><td><A HREF=''>qicharts</A></td><td> - </td><td>Generates runcharts and statistical process control charts. </td></tr>",
+                    "    <tr><td><A HREF='https://cran.r-project.org/web/packages/qicharts/index.html'>qicharts</A></td><td> - </td><td>Generates runcharts and statistical process control charts. </td></tr>",
                     "  </table>",
                     "</font>"
                 )
              )
+
         ) #End the tabsetPanel
     ) #End the dashboardBody
 ) #End the dashboardPage
