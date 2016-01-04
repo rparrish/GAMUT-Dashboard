@@ -8,6 +8,8 @@
 library(shiny)
 library(shinydashboard)
 
+source("functions.R")
+
 header <- dashboardHeader(
     title = "GAMUT Database"
     #dropdownMenuOutput("messageMenu")
@@ -29,20 +31,11 @@ dashboardPage(
          selectInput(
             inputId = "metric_name",
             label = "GAMUT Metric",
-            choices = list(
-                "Neonatal Capnography", "Pediatric Capnography", "Adult Capnography"
-                #"Total Patients", "Total Neonatal Patients", "Total Pediatric Patients", "Total Adult Patients"
-                          # "First Intubation Success", "DASH-1a", "Hypothermia"
-                           ),
-            selectize = FALSE,
-            selected = "All"
+            choices = metric_details$short_name,
+            selectize = FALSE
         ),
-       conditionalPanel(
-            condition = "input.metric_name == 'Hypothermia'", 
-            radioButtons("radio", label = "Age Group",
-                     choices = list("All" = 0, "Neonatal" = 1, "Pediatric" = 2, "Adult" = 3), 
-                     selected = "")
-        ),
+       checkboxInput("showdt", "Show Data Table"),
+       checkboxInput("showdt2", "Show Benchmark Table"),
 
         #HTML('<i class="fa fa-line-chart panelHeader"> Charts</i>'),
         sidebarMenu(
@@ -52,14 +45,7 @@ dashboardPage(
         )
     ),
     dashboardBody(
-        shiny::tags$head(
-            #includeCSS("./www/styles.css"), # Include our custom CSS
-            #tags$style(HTML(tags_style))
-        ),#End tags$head 
-       
-        
-        
-        tabItems( #type = "tabs",
+        tabItems(
              tabItem(
                 tabName = "graph_runchart", 
         fluidRow(
@@ -75,16 +61,22 @@ dashboardPage(
 #                  ),
              box(#title = textOutput("title"),
                 footer = textOutput("footer"),
-                 shiny::plotOutput(outputId = "tcc_runchart", width='95%', height='400px'),
+                 shiny::plotOutput(outputId = "runchart", width='95%', height='400px'),
                 width = 12
-                 )
+                 ),
+             conditionalPanel(
+               condition = "input.showdt == true", 
+                 box( dataTableOutput("data_table"), width = 6 )
+             ),
+              conditionalPanel(
+               condition = "input.showdt2 == true", 
+                 box( dataTableOutput("benchmark_table"), width = 6 )
+             )
             ) 
-             # box( dataTableOutput("data_table"), width = 12 )
              #   HTML("<font color='red'>{<em>Is there some explanatory text you'd like here?</em>}</font><br/>")  ), 
              ),
      tabItem(
                 tabName = "information", 
-                #DT::dataTableOutput(outputId = "ScheduleTableUpcoming"),
                 HTML(
                     "<br/>",
                     "<font color='#605CA8'>GAMUT Database Measure definitions:",
@@ -102,7 +94,7 @@ dashboardPage(
                 HTML(
                     "<br/>",
                     "  <table>",
-                    "    <tr><td><A HREF=''>Shinyapps.io</A></td><td> - </td><td>Dashboard infrastructure and hosting</td></tr>",
+                    "    <tr><td><A HREF='http://www.shinyapps.io'>Shinyapps.io</A></td><td> - </td><td>Dashboard infrastructure and hosting</td></tr>",
                     "    <tr><td><A HREF='https://cran.r-project.org/web/packages/qicharts/index.html'>qicharts</A></td><td> - </td><td>Generates runcharts and statistical process control charts. </td></tr>",
                     "  </table>",
                     "</font>"
