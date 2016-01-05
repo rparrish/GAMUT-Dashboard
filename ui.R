@@ -96,6 +96,7 @@ dashboardPage(
                     "  <table>",
                     "    <tr><td><A HREF='http://www.shinyapps.io'>Shinyapps.io</A></td><td> - </td><td>Dashboard infrastructure and hosting</td></tr>",
                     "    <tr><td><A HREF='https://cran.r-project.org/web/packages/qicharts/index.html'>qicharts</A></td><td> - </td><td>Generates runcharts and statistical process control charts. </td></tr>",
+                    "    <tr><td><A HREF='https://github.com/rparrish/GAMUT-Dashboard'>GitHub</A></td><td> - </td><td>GAMUT Dashboard code repository</td></tr>",
                     "  </table>",
                     "</font>"
                 )
