@@ -9,7 +9,7 @@ library(dplyr)
 
 send_to_mysql <- function() {
     source("R/MySQL_config.R")
-    source("R/.REDCap_config.R")
+    source(".REDCap_config.R")
     
     metric_details <- tbl_df(
         redcap_read_oneshot(
