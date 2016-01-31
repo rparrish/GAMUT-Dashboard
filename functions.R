@@ -70,20 +70,24 @@ qic_data <- function(name = "Neonatal Capnography") {
 qic_plot <- function(metric_name = "Pediatric Capnography") {
    
     qd <- qic_data(metric_name) 
-
+    names(qd) <- c("month", "y", "n", "metric") 
+    
     plot_result <- 
-        tcc(
-        n = metric, 
+        qic(
+        y = y, #unintended_hypothermia, 
+        n = n, 
         x = month,
-        date.format = "%b %Y",
+        x.format = "%b %Y",
         main = paste(metric_name), 
         direction = 1, 
         data = qd,
+        chart = "run",
         multiply = 100,
         xlab = "",
+        ylab = "Percent",
         #ylab = paste(total_count()$metric_ylab),
         #ylim = c(0,100),
-        cex = 1.25,
+        cex = 1.0,
         las = 2,
         print = FALSE
         #plot = TRUE 
