@@ -1,10 +1,9 @@
 .Rproj.user
 .Rhistory
 .RData
-
 Data/
 *.html
 *.dcf
-
 R/MySQL_config.R
 R/.REDCap_config.R
+.REDCap_config.R
