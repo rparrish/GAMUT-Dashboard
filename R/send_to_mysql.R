@@ -5,6 +5,7 @@
 
 library(RMySQL)
 library(REDCapR)
+library(dplyr)
 
 send_to_mysql <- function() {
     source("R/MySQL_config.R")
