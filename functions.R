@@ -19,6 +19,7 @@ con <-  dbConnect(RMySQL::MySQL(),
 monthly_data <- dbGetQuery(con, "SELECT * FROM monthly_data;")
 
 metric_details <- dbGetQuery(con, "SELECT * FROM metric_details;")
+metadata <- dbGetQuery(con, "SELECT * FROM metadata;")
 
 dbDisconnect(con)
 
@@ -38,7 +39,7 @@ metric_comps <- function(name = "Neonatal Capnography") {
 
     comp_data$avg <- round(comp_data[, 1]/comp_data[, 2],2)
     
-    comp_data$benchmark <- "benchmark"
+    comp_data$benchmark <- "Under construction"
 
     return(comp_data)
     
