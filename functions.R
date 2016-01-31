@@ -67,7 +67,7 @@ qic_data <- function(name = "Neonatal Capnography") {
 
 
 
-qic_plot <- function(metric_name = "Pediatric Capnography") {
+qic_plot <- function(metric_name = "Pediatric Capnography", chart = "run") {
    
     qd <- qic_data(metric_name) 
     names(qd) <- c("month", "y", "n", "metric") 
@@ -81,7 +81,7 @@ qic_plot <- function(metric_name = "Pediatric Capnography") {
         main = paste(metric_name), 
         direction = 1, 
         data = qd,
-        chart = "run",
+        chart = chart,
         multiply = 100,
         xlab = "",
         ylab = "Percent",
