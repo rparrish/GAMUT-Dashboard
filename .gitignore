@@ -2,6 +2,7 @@
 .Rhistory
 .RData
 Data/
+data/
 *.html
 *.dcf
 R/MySQL_config.R

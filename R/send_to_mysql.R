@@ -67,7 +67,7 @@ send_to_mysql <- function() {
     dbWriteTable(
         conn,
         name = "metric_details",
-        value = data.frame(GAMUT_data),
+        value = data.frame(metric_details),
         overwrite = TRUE
     )
     dbWriteTable(
