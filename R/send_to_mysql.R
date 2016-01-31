@@ -53,6 +53,46 @@ send_to_mysql <- function() {
         data.frame(key = c("GAMUT_date_loaded"),
                    value = Sys.time())
     
+    
+    mydata <- redcap_data %>%
+        mutate(program_name = as.factor(program_name),
+               redcap_event_name = as.factor(redcap_event_name),
+               redcap_data_access_group = as.factor(redcap_data_access_group),
+               program_info_complete = as.factor(program_info_complete),
+               monthly_data_complete = as.factor(monthly_data_complete)
+        )
+    
+    program_info <- mydata %>%
+        filter(redcap_event_name == "Initial") %>%
+        select(program_name,redcap_data_access_group:program_info_complete)
+    
+    ID.lookup <- data.frame(
+        program_name = levels(mydata$program_name)
+        , ID = anonymize(as.factor(mydata$program_name))
+    )
+    
+    # ## Bedside STEMI Times
+    # bedside_stemi <- plyr::ddply(mydata[mydata$stemi_cases > 0, c(1,2,39,40,41,42)], .(program_name, ID),
+    #                        function(x) data.frame(
+    #                            bedside_stemi.wavg=weighted.mean(x$mean_bedside_stemi, x$stemi_cases, na.rm=TRUE)
+    #                        )
+    # )
+    
+    mydata <- mydata %>% inner_join(ID.lookup)
+    
+    monthly_data <- 
+        mydata %>%
+        filter(redcap_event_name != "Initial") %>%
+        droplevels() %>%
+        filter(!is.na(total_patients)) %>%
+        mutate(month = as.Date(paste("01", as.character(redcap_event_name)), format = "%d %b %Y")) %>%
+        select(program_name, ID, month, redcap_data_access_group, total_patients:monthly_data_complete)
+    
+    
+    
+    
+    
+    
 ## Send to MySQL    
     conn <-  dbConnect(
         RMySQL::MySQL(),
