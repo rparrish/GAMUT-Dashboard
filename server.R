@@ -67,7 +67,7 @@ program_select <- reactive({
   output$runchart <- renderPlot({
       
       runchart_plot <- 
-          qic_plot(input$metric_name)
+          qic_plot(input$metric_name, input$chart)
   })
  
   # patient count -------------------------

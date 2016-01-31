@@ -34,14 +34,21 @@ dashboardPage(
             choices = metric_details$short_name,
             selectize = FALSE
         ),
+       radioButtons("chart", "Chart type:",
+                     c("Runchart" = "run",
+                       "SPC p-chart" = "p")),
+        
        checkboxInput("showdt", "Show Data Table"),
        checkboxInput("showdt2", "Show Benchmark Table"),
 
         #HTML('<i class="fa fa-line-chart panelHeader"> Charts</i>'),
         sidebarMenu(
-            menuItem("Runchart", tabName="graph_runchart", icon = icon("line-chart")),
+            menuItem("Chart", tabName="graph_runchart", icon = icon("line-chart")),
             menuItem("Measure Definitions", tabName="information", icon = icon("book")),
-            menuItem("Resources", tabName="general_links")
+            menuItem("Resources", tabName="general_links"), 
+            HTML(paste("Data Refreshed:\n", 
+                       metadata[metadata$key == "GAMUT_date_loaded", "value"]
+                       ))
         )
     ),
     dashboardBody(
