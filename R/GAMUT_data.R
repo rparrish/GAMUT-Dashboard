@@ -10,7 +10,7 @@
 #' 
 
 
-GAMUT_data <- function(file="data/GAMUT.Rdata") {
+GAMUT_data <- function(file="Data/GAMUT.Rdata") {
     ## load data
     source("R/.REDCap_config.R")
     source("R/anonymize.R")
