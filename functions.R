@@ -84,12 +84,15 @@ qic_plot <- function(metric_name = "Pediatric Capnography", chart = "run") {
         data = qd,
         chart = chart,
         multiply = 100,
+        #target = .94,
         xlab = "",
         ylab = "Percent",
         #ylab = paste(total_count()$metric_ylab),
-        #ylim = c(0,100),
+        ylim = c(0,100),
         cex = 1.0,
         las = 2,
+        nint = 12,
+        freeze = 12,
         print = FALSE
         #plot = TRUE 
         #runvals = TRUE
