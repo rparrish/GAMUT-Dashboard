@@ -8,6 +8,7 @@
 # load functions
 
 source("functions.R")
+source("R/send_to_mysql.R")
 
 # metric data (static) ------------------
 # 
@@ -62,6 +63,10 @@ program_select <- reactive({
        details
     })
     
+# refresh data -----------------------------
+    observeEvent(input$send_to_mysql, {
+        send_to_mysql()
+    })
 # runchart -----------------------------
 
   output$runchart <- renderPlot({
