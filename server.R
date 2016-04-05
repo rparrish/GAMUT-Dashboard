@@ -29,7 +29,7 @@ source("functions.R")
 
 
 # Shiny server ----------------------------
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
 
 # program select --------------------------
 program_select <- reactive({
@@ -117,4 +117,17 @@ program_select <- reactive({
           options = list(searching = FALSE, paging = FALSE, ordering = FALSE)
       )
 
+  # client data ---------------------------- 
+  # Store in a convenience variable
+  cdata <- session$clientData
+  
+  # Values from cdata returned as text
+  output$clientdataText <- renderText({
+      cnames <- names(cdata)
+      
+      allvalues <- lapply(cnames, function(name) {
+          paste(name, cdata[[name]], sep=" = ")
+      })
+      paste(allvalues, collapse = "\n")
+  })
 })
