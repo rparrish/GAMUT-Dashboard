@@ -49,9 +49,9 @@ dashboardPage(
             HTML(paste("Data Refreshed:\n", 
                        metadata[metadata$key == "GAMUT_date_loaded", "value"]
                        ))
-        ), 
+        ) 
        # Refresh data button 
-       actionButton("send_to_mysql", "Refresh data")
+       #actionButton("send_to_mysql", "Refresh data")
     ),
     dashboardBody(
         tabItems(

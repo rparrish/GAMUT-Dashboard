@@ -70,7 +70,9 @@ program_select <- reactive({
 # runchart -----------------------------
 
   output$runchart <- renderPlot({
-      
+      #check if foo was passed, if it is add the UI elements
+      query <- parseQueryString(session$clientData$url_search)
+      validate(need(!is.null(query$foo), "Please provide parameter 'foo'"))
       runchart_plot <- 
           qic_plot(input$metric_name, input$chart)
   })
