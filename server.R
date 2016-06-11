@@ -40,10 +40,11 @@ output$program_name <- renderUI({
     inputId = "program_name",
     label = "Program Name",
     choices = { 
+        programs <- all_data
         if(!is.null(input$redcap_data_access_group)) {
-        mydata <- filter(mydata, redcap_data_access_group == input$redcap_data_access_group) %>%
+        programs <- filter(programs, redcap_data_access_group == input$redcap_data_access_group) %>%
             droplevels()} 
-        levels(as.factor(mydata$program_name))
+        levels(as.factor(programs$program_name))
         },
     selectize = FALSE
     )
