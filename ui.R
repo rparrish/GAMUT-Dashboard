@@ -60,6 +60,7 @@ dashboardPage(
         tabItems(
              tabItem(
                 tabName = "graph_runchart", 
+       h2(textOutput("dag")),
         fluidRow(
             #infoBoxOutput("patient_count"),
             infoBoxOutput("average", width = 6),

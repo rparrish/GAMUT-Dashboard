@@ -149,4 +149,16 @@ output$program_name <- renderUI({
       })
       paste(allvalues, collapse = "\n")
   })
+  
+  # get the DAG from clientData
+  output$dag <- renderText({
+      paste(session$clientData$url_search)
+      
+      
+  })
+  output$DAG <- renderInfoBox({
+      infoBox(title = "DAG", 
+              value = session$clientData$url_search,
+              icon  = icon("dashboard"))
+  })
 })
