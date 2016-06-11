@@ -30,7 +30,7 @@ metric_comps <- function(name = "Neonatal Capnography") {
         as.character()
     
     comp_data <- 
-        select_(monthly_data, .dots = c("month", vars[5:6])) %>%
+        select_(all_data, .dots = c("month", vars[5:6])) %>%
         filter(.[, 2]/.[, 3] <= 1) %>%
         group_by(month) %>%
         summarise_each(funs(sum(., na.rm = TRUE))) %>%
@@ -53,22 +53,18 @@ qic_data <- function(name = "Neonatal Capnography",
     vars <- filter(metric_details, grepl(name, short_name)) %>%
     as.character()
 
-    mydata <- monthly_data
-    
-    #if(!is.null(program_name)) {
-        mydata <- filter(mydata, program_name == program_name)
-        #} 
-        
     qd <- 
-        select_(mydata, .dots = c("month", vars[5:6])) %>%
-        filter(.[, 2]/.[, 3] <= 1) %>%
-        group_by(month) %>%
+        select_(all_data, .dots = c("month", "program_name", vars[c(5:6)])) %>%
+        filter(.[, 3]/.[, 4] <= 1) %>%
+        group_by(program_name, month) %>%
         summarise_each(funs(sum(., na.rm = TRUE))) %>%
         ungroup() %>%
         mutate(month = as.Date(month)) %>%
         data.frame()
     
-    qd$metric = round(qd[, 2]/qd[, 3],2)
+    qd$metric = round(qd[, 3]/qd[, 4],2)
+
+    qd <- qd[qd$program_name == program_name,]
     
     return(qd)
     
@@ -82,7 +78,7 @@ qic_plot <- function(metric_name = "Pediatric Capnography",
                      program_name = NULL) {
    
     qd <- qic_data(metric_name, program_name = program_name) 
-    names(qd) <- c("month", "y", "n", "metric") 
+    names(qd) <- c("program_name", "month", "y", "n", "metric") 
     
     plot_result <- 
         qic(
