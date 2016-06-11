@@ -33,13 +33,24 @@ source("R/send_to_mysql.R")
 shinyServer(function(input, output, session) {
 
 # program select --------------------------
-program_select <- reactive({
-    a <- ifelse(input$program_name == "(please assign)", NULL, input$program_name)
-    a
+output$program_name <- renderUI({
+
+        
+    selectInput(
+    inputId = "program_name",
+    label = "Program Name",
+    choices = { 
+        if(!is.null(input$redcap_data_access_group)) {
+        mydata <- filter(mydata, redcap_data_access_group == input$redcap_data_access_group) %>%
+            droplevels()} 
+        levels(as.factor(mydata$program_name))
+        },
+    selectize = FALSE
+    )
 })
 
 
-# metric data (reactive) ------------------
+# metric data (reactive) -------------#-----
 # 
  mydata_agg <-  reactive({
     mydata_agg_static     
@@ -72,9 +83,9 @@ program_select <- reactive({
   output$runchart <- renderPlot({
       #check if foo was passed, if it is add the UI elements
       query <- parseQueryString(session$clientData$url_search)
-      validate(need(!is.null(query$dag), "Please access via REDCap"))
+      #validate(need(!is.null(query$dag), "Please access via REDCap"))
       runchart_plot <- 
-          qic_plot(input$metric_name, input$chart)
+          qic_plot(input$metric_name, input$chart, program_name = input$program_name)
   })
  
   # patient count -------------------------

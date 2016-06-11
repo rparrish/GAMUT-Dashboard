@@ -16,7 +16,9 @@ con <-  dbConnect(RMySQL::MySQL(),
                   dbname = .mysql_dbname
 )
 
-monthly_data <- dbGetQuery(con, "SELECT * FROM monthly_data;")
+all_data <- dbGetQuery(con, "SELECT * FROM monthly_data;")
+
+#monthly_data <- all_data 
 
 metric_details <- dbGetQuery(con, "SELECT * FROM metric_details;")
 metadata <- dbGetQuery(con, "SELECT * FROM metadata;")
@@ -46,12 +48,19 @@ metric_comps <- function(name = "Neonatal Capnography") {
 }
 
 
-qic_data <- function(name = "Neonatal Capnography") {
+qic_data <- function(name = "Neonatal Capnography", 
+                     program_name  = NULL) {
     vars <- filter(metric_details, grepl(name, short_name)) %>%
     as.character()
 
+    mydata <- monthly_data
+    
+    #if(!is.null(program_name)) {
+        mydata <- filter(mydata, program_name == program_name)
+        #} 
+        
     qd <- 
-        select_(monthly_data, .dots = c("month", vars[5:6])) %>%
+        select_(mydata, .dots = c("month", vars[5:6])) %>%
         filter(.[, 2]/.[, 3] <= 1) %>%
         group_by(month) %>%
         summarise_each(funs(sum(., na.rm = TRUE))) %>%
@@ -68,9 +77,11 @@ qic_data <- function(name = "Neonatal Capnography") {
 
 
 
-qic_plot <- function(metric_name = "Pediatric Capnography", chart = "run") {
+qic_plot <- function(metric_name = "Pediatric Capnography", 
+                     chart = "run", 
+                     program_name = NULL) {
    
-    qd <- qic_data(metric_name) 
+    qd <- qic_data(metric_name, program_name = program_name) 
     names(qd) <- c("month", "y", "n", "metric") 
     
     plot_result <- 
@@ -79,7 +90,7 @@ qic_plot <- function(metric_name = "Pediatric Capnography", chart = "run") {
         n = n, 
         x = month,
         x.format = "%b %Y",
-        main = paste(metric_name), 
+        main = paste(program_name, ": ", metric_name), 
         direction = 1, 
         data = qd,
         chart = chart,

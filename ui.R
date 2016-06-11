@@ -21,13 +21,16 @@ dashboardPage(
     header = header,
     dashboardSidebar(
         #HTML('<i class="fa fa-filter panelHeader"> Filters</i>'),
-#         selectInput(
-#             inputId = "program_name",
-#             label = "Program Name",
-#             choices = list("Akron Childrens", "Cincinnati Childrens"),
-#             selectize = FALSE,
-#             selected = "All"
-#         ),
+        
+         selectInput(
+             inputId = "redcap_data_access_group",
+             label = "DAG",
+             choices = levels(as.factor(all_data$redcap_data_access_group)),
+             selected = "Akron Childrens",
+             selectize = FALSE
+         ),
+         
+         uiOutput("program_name"),
          selectInput(
             inputId = "metric_name",
             label = "GAMUT Metric",
