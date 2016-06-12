@@ -32,6 +32,7 @@ source("R/send_to_mysql.R")
 # Shiny server ----------------------------
 shinyServer(function(input, output, session) {
 
+
 # program select --------------------------
 output$program_name <- renderUI({
 
@@ -152,7 +153,13 @@ output$program_name <- renderUI({
   
   # get the DAG from clientData
   output$dag <- renderText({
-      paste(session$clientData$url_search)
+      url_search <- session$clientData$url_search 
+      
+      dag <- substring(url_search, 6)
+      
+      dag_name <- URLdecode(dag) 
+      
+      paste(dag_name)
       
       
   })
