@@ -22,13 +22,13 @@ dashboardPage(
     dashboardSidebar(
         #HTML('<i class="fa fa-filter panelHeader"> Filters</i>'),
         
-         selectInput(
-             inputId = "redcap_data_access_group",
-             label = "DAG",
-             choices = levels(as.factor(all_data$redcap_data_access_group)),
-             selected = "Akron Childrens",
-             selectize = FALSE
-         ),
+         # selectInput(
+         #     inputId = "redcap_data_access_group",
+         #     label = "DAG",
+         #     choices = levels(as.factor(all_data$redcap_data_access_group)),
+         #     selected = "Akron Childrens",
+         #     selectize = FALSE
+         # ),
          
          uiOutput("program_name"),
          selectInput(
@@ -62,7 +62,6 @@ dashboardPage(
                 tabName = "graph_runchart", 
        h2(textOutput("dag")),
         fluidRow(
-            #infoBoxOutput("patient_count"),
             infoBoxOutput("average", width = 6),
             infoBoxOutput("benchmark", width = 6)
         ),

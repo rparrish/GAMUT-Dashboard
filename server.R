@@ -42,9 +42,11 @@ output$program_name <- renderUI({
     label = "Program Name",
     choices = { 
         programs <- all_data
-        if(!is.null(input$redcap_data_access_group)) {
-        programs <- filter(programs, redcap_data_access_group == input$redcap_data_access_group) %>%
-            droplevels()} 
+        if(dag_name2() != "") {
+        programs <- filter(programs, redcap_data_access_group == dag_name2()) %>%
+            droplevels()
+        }
+        
         levels(as.factor(programs$program_name))
         },
     selectize = FALSE
@@ -58,7 +60,13 @@ output$program_name <- renderUI({
     mydata_agg_static     
  })
 #     
-       
+ 
+dag_name2 <- reactive({
+    url_search <- session$clientData$url_search 
+    dag <- substring(url_search, 6)
+    dag_name <- URLdecode(dag) 
+    paste(dag_name)
+})
     
 # counts ---------------------------------
     total_count <- reactive({
@@ -85,7 +93,7 @@ output$program_name <- renderUI({
   output$runchart <- renderPlot({
       #check if foo was passed, if it is add the UI elements
       query <- parseQueryString(session$clientData$url_search)
-      #validate(need(!is.null(query$dag), "Please access via REDCap"))
+      validate(need(!is.null(query$dag), "Please access via REDCap"))
       runchart_plot <- 
           qic_plot(input$metric_name, input$chart, program_name = input$program_name)
   })
@@ -154,18 +162,15 @@ output$program_name <- renderUI({
   # get the DAG from clientData
   output$dag <- renderText({
       url_search <- session$clientData$url_search 
-      
       dag <- substring(url_search, 6)
-      
       dag_name <- URLdecode(dag) 
-      
       paste(dag_name)
       
       
   })
-  output$DAG <- renderInfoBox({
-      infoBox(title = "DAG", 
-              value = session$clientData$url_search,
-              icon  = icon("dashboard"))
+  output$DAG <- renderInfoBox({      
+      infoBox(title = "Benchmark",  
+              value = dag_name2(),
+              icon  = icon("flag-checkered"))
   })
 })
