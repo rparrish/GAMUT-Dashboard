@@ -15,5 +15,5 @@ https://ampa.shinyapps.io/GAMUT_dashboard
  - [ ] Benchmarks
  - [ ] Add comparison dotplots
  - [ ] Summary view (all metrics on one page)
- - [ ] Overall metric submission rates 
+ - [ ] Overall metric submission rates (heatmap)
  - [ ] migrate to flexdashboard
