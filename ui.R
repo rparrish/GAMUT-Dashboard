@@ -41,8 +41,8 @@ dashboardPage(
                      c("Runchart" = "run",
                        "SPC p-chart" = "p")),
         
-       checkboxInput("showdt", "Show Data Table"),
-       checkboxInput("showdt2", "Show Benchmark Table"),
+       #checkboxInput("showdt", "Show Data Table"),
+       #checkboxInput("showdt2", "Show Benchmark Table"),
 
         #HTML('<i class="fa fa-line-chart panelHeader"> Charts</i>'),
         sidebarMenu(
@@ -84,7 +84,7 @@ dashboardPage(
                condition = "input.showdt2 == true", 
                  box( dataTableOutput("benchmark_table"), width = 6 )
              )
-            ) 
+        )
              #   HTML("<font color='red'>{<em>Is there some explanatory text you'd like here?</em>}</font><br/>")  ), 
              ),
      tabItem(
