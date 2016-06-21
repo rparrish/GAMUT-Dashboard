@@ -48,11 +48,68 @@ metric_comps <- function(name = "Neonatal Capnography") {
 }
 
 
+# calculate the target benchmark for the specified metric
+
+benchmark <- function(name = "Neonatal Hypothermia", 
+                      #method = list("mean_top_pop", "top_decile"),
+                      bench_start = "2015-01-01", 
+                      bench_end = "2015-12-01") {
+    vars <- filter(metric_details, grepl(name, short_name)) %>%
+        as.character()
+    
+    bench_data <- 
+        select_(all_data, .dots = c("month", "program_name", vars[c(5:6)])) %>%
+        select(month, program_name, num = 3, den = 4) %>%
+        filter(num/den <= 1) %>%
+        filter(as.Date(month) >= as.Date(bench_start), 
+               as.Date(month) <= as.Date(bench_end)) %>%
+        #filter(substr(month,1,4) == "2015") %>%
+        group_by(program_name) %>%
+        summarize(n = n(), 
+                  numerator = sum(num), 
+                  denominator = sum(den), 
+                  rate = numerator/denominator, 
+                  abc_rank = (sum(num) +1)/(sum(den) + 1)) %>%
+        #filter(n >= 6) %>%
+        arrange(desc(abc_rank))
+    
+    decile = .9
+    
+    if (vars[7] == "Lower") {
+        bench_data <- arrange(bench_data, abc_rank)
+        decile = .1
+    }
+   
+    bench_data <- mutate(bench_data, 
+           rank  = row_number(),
+           cusum = cumsum(denominator), 
+           perc_population = cusum/sum(bench_data$denominator)
+           )
+    
+    top_decile <- 
+        quantile(bench_data$rate, decile)
+        
+    top_pop <- 
+        bench_data %>%
+        filter(perc_population < .1) 
+    
+    mean_top_pop <- 
+        top_pop %>%
+        summarize(mean_top_pop = sum(numerator)/sum(denominator))
+        
+    results <- list(
+        top_decile = top_decile,
+        mean_top_pop = mean_top_pop
+    )
+    mean_top_pop
+}
+
 qic_data <- function(name = "Neonatal Capnography", 
                      program_name  = NULL) {
     vars <- filter(metric_details, grepl(name, short_name)) %>%
     as.character()
 
+    
     qd <- 
         select_(all_data, .dots = c("month", "program_name", vars[c(5:6)])) %>%
         filter(.[, 3]/.[, 4] <= 1) %>%
@@ -71,14 +128,16 @@ qic_data <- function(name = "Neonatal Capnography",
 }
         
 
-
-
 qic_plot <- function(metric_name = "Pediatric Capnography", 
                      chart = "run", 
                      program_name = NULL) {
    
     qd <- qic_data(metric_name, program_name = program_name) 
     names(qd) <- c("program_name", "month", "y", "n", "metric") 
+    
+    target <- 
+        benchmark(name = metric_name) %>%
+        round(., 3)
     
     if(nrow(qd) > 6) {
     plot_result <- 
@@ -92,7 +151,7 @@ qic_plot <- function(metric_name = "Pediatric Capnography",
         data = qd,
         chart = chart,
         multiply = 100,
-        target = .94,
+        target = target,
         llabs = c("LCL", "CL", "UCL", "Bench"),
         xlab = "",
         ylab = "Percent",
@@ -120,3 +179,5 @@ qic_plot <- function(metric_name = "Pediatric Capnography",
     
 }
 
+
+    
