@@ -114,15 +114,15 @@ dag_name2 <- reactive({
  
   # average ------------------------------
   output$average <- renderInfoBox(
-      infoBox(title = "Rolling 12-month Avg", 
+      infoBox(title = "GAMUT Rolling 12-month Avg", 
               value = paste(total_count()$avg*100,"%"),
               icon = icon("star-half-full"))
   ) # end average
 
   # benchmark ------------------------------
   output$benchmark <- renderInfoBox(
-      infoBox(title = "Benchmark", 
-              value = total_count()$benchmark,
+      infoBox(title = "Achievable Benchmark of Care (ABC)", 
+              value = paste0(round(benchmark(input$metric_name),3)*100,"%"),
               icon  = icon("flag-checkered"))
   ) # end benchmark
 
