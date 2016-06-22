@@ -52,7 +52,11 @@ dashboardPage(
             HTML(paste("Data Refreshed:\n", 
                        metadata[metadata$key == "GAMUT_date_loaded", "value"]
                        ))
-        ) 
+        ),
+       tags$p(),
+       tags$a(href = "https://github.com/rparrish/GAMUT-Dashboard/issues", 
+              "Issues or Requests? Click here")
+       
        # Refresh data button 
        #actionButton("send_to_mysql", "Refresh data")
     ),
