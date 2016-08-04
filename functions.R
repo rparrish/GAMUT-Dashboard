@@ -135,7 +135,7 @@ qic_plot <- function(metric_name = "Pediatric Capnography",
         benchmark(name = metric_name) %>%
         round(., 3)
     
-    if(nrow(qd) > 6) {
+    if(nrow(qd) >= 6) {
     plot_result <- 
         qic(
         y = y, #unintended_hypothermia, 
