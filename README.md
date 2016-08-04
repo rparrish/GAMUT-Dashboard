@@ -10,4 +10,4 @@ https://ampa.shinyapps.io/GAMUT_dashboard
  - [x] Initial Prototype
  - [x] ETCo2 Monitoring 
  - [ ] All metrics
- - [ ] Individual programs
+ - [x] Individual programs
