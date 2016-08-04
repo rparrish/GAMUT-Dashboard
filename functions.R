@@ -4,6 +4,7 @@ library(shiny)
 library(qicharts)
 library(DBI)
 library(dplyr)
+library(d3heatmap)
 
 
 source("R/MySQL_config.R")

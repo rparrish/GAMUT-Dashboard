@@ -176,12 +176,24 @@ dag_name2 <- reactive({
 
   
 # heatmap -----------------------------
-  output$heatmap <- renderPlot({
+  output$heatmap <- renderD3heatmap({
       #check if foo was passed, if it is add the UI elements
-      query <- parseQueryString(session$clientData$url_search)
-      validate(need(!is.null(query$dag), "Please access via REDCap"))
-      heatmap_plot <- 
-          qic_plot(input$metric_name, input$chart, program_name = input$program_name)
+      
+      heat_data <- 
+          monthly_data %>%
+          select(1:58) %>%
+          filter(month >= as.Date("2015-07-01")) %>%
+          group_by(program_name) %>%
+          summarise_each(funs(sum(. >= 0, na.rm = TRUE))) %>%
+          arrange(program_name) %>%
+          data.frame() 
+      
+      rownames(heat_data) <- heat_data$program_name
+      heat_data <- heat_data[,-c(1:4)]
+      
+      heatmap_plot <- d3heatmap(heat_data, dendrogram = 'none')
+      heatmap_plot
+      
   })
  })
 

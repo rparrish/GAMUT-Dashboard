@@ -108,13 +108,7 @@ dashboardPage(
             ), 
            tabItem(
                tabName = "heatmap", 
-       h2("heatmap"),
-        fluidRow(
-             box(#title = textOutput("title"),
-                 shiny::plotOutput(outputId = "heatmap"),# width='95%', height='400px'),
-                width = 12
-                 )
-               )
+       d3heatmapOutput("heatmap", width = "100%", height = 2000)
        ),
            tabItem(
                 tabName = "general_links", 
