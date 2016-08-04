@@ -21,13 +21,16 @@ dashboardPage(
     header = header,
     dashboardSidebar(
         #HTML('<i class="fa fa-filter panelHeader"> Filters</i>'),
-#         selectInput(
-#             inputId = "program_name",
-#             label = "Program Name",
-#             choices = list("Akron Childrens", "Cincinnati Childrens"),
-#             selectize = FALSE,
-#             selected = "All"
-#         ),
+        
+         # selectInput(
+         #     inputId = "redcap_data_access_group",
+         #     label = "DAG",
+         #     choices = levels(as.factor(all_data$redcap_data_access_group)),
+         #     selected = "Akron Childrens",
+         #     selectize = FALSE
+         # ),
+         
+         uiOutput("program_name"),
          selectInput(
             inputId = "metric_name",
             label = "GAMUT Metric",
@@ -38,8 +41,8 @@ dashboardPage(
                      c("Runchart" = "run",
                        "SPC p-chart" = "p")),
         
-       checkboxInput("showdt", "Show Data Table"),
-       checkboxInput("showdt2", "Show Benchmark Table"),
+       #checkboxInput("showdt", "Show Data Table"),
+       #checkboxInput("showdt2", "Show Benchmark Table"),
 
         #HTML('<i class="fa fa-line-chart panelHeader"> Charts</i>'),
         sidebarMenu(
@@ -49,16 +52,20 @@ dashboardPage(
             HTML(paste("Data Refreshed:\n", 
                        metadata[metadata$key == "GAMUT_date_loaded", "value"]
                        ))
-        ), 
+        ),
+       tags$p(),
+       tags$a(href = "https://github.com/rparrish/GAMUT-Dashboard/issues", 
+              "Issues or Requests? Click here")
+       
        # Refresh data button 
-       actionButton("send_to_mysql", "Refresh data")
+       #actionButton("send_to_mysql", "Refresh data")
     ),
     dashboardBody(
         tabItems(
              tabItem(
                 tabName = "graph_runchart", 
+       h2(textOutput("dag")),
         fluidRow(
-            #infoBoxOutput("patient_count"),
             infoBoxOutput("average", width = 6),
             infoBoxOutput("benchmark", width = 6)
         ),
@@ -81,7 +88,7 @@ dashboardPage(
                condition = "input.showdt2 == true", 
                  box( dataTableOutput("benchmark_table"), width = 6 )
              )
-            ) 
+        )
              #   HTML("<font color='red'>{<em>Is there some explanatory text you'd like here?</em>}</font><br/>")  ), 
              ),
      tabItem(
@@ -108,7 +115,8 @@ dashboardPage(
                     "    <tr><td><A HREF='https://github.com/rparrish/GAMUT-Dashboard'>GitHub</A></td><td> - </td><td>GAMUT Dashboard code repository</td></tr>",
                     "  </table>",
                     "</font>"
-                )
+                ), 
+                verbatimTextOutput("clientdataText")
              )
 
         ) #End the tabsetPanel

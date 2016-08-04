@@ -30,22 +30,43 @@ source("R/send_to_mysql.R")
 
 
 # Shiny server ----------------------------
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
+
 
 # program select --------------------------
-program_select <- reactive({
-    a <- ifelse(input$program_name == "(please assign)", NULL, input$program_name)
-    a
+output$program_name <- renderUI({
+
+        
+    selectInput(
+    inputId = "program_name",
+    label = "Program Name",
+    choices = { 
+        programs <- all_data
+        if(dag_name2() != "") {
+        programs <- filter(programs, redcap_data_access_group == dag_name2()) %>%
+            droplevels()
+        }
+        
+        levels(as.factor(programs$program_name))
+        },
+    selectize = FALSE
+    )
 })
 
 
-# metric data (reactive) ------------------
+# metric data (reactive) -------------#-----
 # 
  mydata_agg <-  reactive({
     mydata_agg_static     
  })
 #     
-       
+ 
+dag_name2 <- reactive({
+    url_search <- session$clientData$url_search 
+    dag <- substring(url_search, 6)
+    dag_name <- URLdecode(dag) 
+    paste(dag_name)
+})
     
 # counts ---------------------------------
     total_count <- reactive({
@@ -70,9 +91,11 @@ program_select <- reactive({
 # runchart -----------------------------
 
   output$runchart <- renderPlot({
-      
+      #check if foo was passed, if it is add the UI elements
+      query <- parseQueryString(session$clientData$url_search)
+      validate(need(!is.null(query$dag), "Please access via REDCap"))
       runchart_plot <- 
-          qic_plot(input$metric_name, input$chart)
+          qic_plot(input$metric_name, input$chart, program_name = input$program_name)
   })
  
   # patient count -------------------------
@@ -91,15 +114,15 @@ program_select <- reactive({
  
   # average ------------------------------
   output$average <- renderInfoBox(
-      infoBox(title = "Rolling 12-month Avg", 
+      infoBox(title = "GAMUT Rolling 12-month Avg", 
               value = paste(total_count()$avg*100,"%"),
               icon = icon("star-half-full"))
   ) # end average
 
   # benchmark ------------------------------
   output$benchmark <- renderInfoBox(
-      infoBox(title = "Benchmark", 
-              value = total_count()$benchmark,
+      infoBox(title = "Achievable Benchmark of Care (ABC)", 
+              value = paste0(round(benchmark(input$metric_name),3)*100,"%"),
               icon  = icon("flag-checkered"))
   ) # end benchmark
 
@@ -122,4 +145,32 @@ program_select <- reactive({
           options = list(searching = FALSE, paging = FALSE, ordering = FALSE)
       )
 
+  # client data ---------------------------- 
+  # Store in a convenience variable
+  cdata <- session$clientData
+  
+  # Values from cdata returned as text
+  output$clientdataText <- renderText({
+      cnames <- names(cdata)
+      
+      allvalues <- lapply(cnames, function(name) {
+          paste(name, cdata[[name]], sep=" = ")
+      })
+      paste(allvalues, collapse = "\n")
+  })
+  
+  # get the DAG from clientData
+  output$dag <- renderText({
+      url_search <- session$clientData$url_search 
+      dag <- substring(url_search, 6)
+      dag_name <- URLdecode(dag) 
+      paste(dag_name)
+      
+      
+  })
+  output$DAG <- renderInfoBox({      
+      infoBox(title = "Benchmark",  
+              value = dag_name2(),
+              icon  = icon("flag-checkered"))
+  })
 })
