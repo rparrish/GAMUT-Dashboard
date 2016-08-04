@@ -173,4 +173,17 @@ dag_name2 <- reactive({
               value = dag_name2(),
               icon  = icon("flag-checkered"))
   })
-})
+
+  
+# heatmap -----------------------------
+  output$heatmap <- renderPlot({
+      #check if foo was passed, if it is add the UI elements
+      query <- parseQueryString(session$clientData$url_search)
+      validate(need(!is.null(query$dag), "Please access via REDCap"))
+      heatmap_plot <- 
+          qic_plot(input$metric_name, input$chart, program_name = input$program_name)
+  })
+ })
+
+
+

@@ -48,6 +48,7 @@ dashboardPage(
         sidebarMenu(
             menuItem("Chart", tabName="graph_runchart", icon = icon("line-chart")),
             menuItem("Measure Definitions", tabName="information", icon = icon("book")),
+            menuItem("Heatmap", tabName="heatmap", icon = icon("book")),
             menuItem("Resources", tabName="general_links"), 
             HTML(paste("Data Refreshed:\n", 
                        metadata[metadata$key == "GAMUT_date_loaded", "value"]
@@ -105,6 +106,16 @@ dashboardPage(
                     "</font>"
                 )
             ), 
+           tabItem(
+               tabName = "heatmap", 
+       h2("heatmap"),
+        fluidRow(
+             box(#title = textOutput("title"),
+                 shiny::plotOutput(outputId = "heatmap"),# width='95%', height='400px'),
+                width = 12
+                 )
+               )
+       ),
            tabItem(
                 tabName = "general_links", 
                  tags$h4("Resources"),
