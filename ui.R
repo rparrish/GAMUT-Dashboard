@@ -54,7 +54,8 @@ dashboardPage(
                        ))
         ),
        tags$p(),
-       tags$a(href = "https://github.com/rparrish/GAMUT-Dashboard/issues", 
+       tags$a(href = "https://github.com/rparrish/GAMUT-Dashboard/issues",
+              target="_blank",
               "Issues or Requests? Click here")
        
        # Refresh data button 
