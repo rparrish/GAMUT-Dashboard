@@ -163,14 +163,13 @@ qic_plot <- function(metric_name = "Pediatric Capnography",
         #sub = "subtitle"
         
         ) } else {
-           #  http://stackoverflow.com/questions/19918985/r-plot-only-text
-            plot(c(0, 1), c(0, 1), ann = F, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n')
-            text(x = 0.5, y = 0.5, paste("Insufficient data"), 
+                #  http://stackoverflow.com/questions/19918985/r-plot-only-text
+                plot(c(0, 1), c(0, 1), ann = F, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n')
+                text(x = 0.5, y = 0.5, paste("Insufficient data"), 
                  cex = 1.6, col = "black")
-            
         }
    
-    results <- list(plot_result = plot_result, data = qd)
+    results <- list(data = qd)
     invisible(results)
     
 }
