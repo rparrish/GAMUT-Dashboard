@@ -124,7 +124,7 @@ qic_data <- function(name = "Neonatal Capnography",
 }
         
 
-qic_plot <- function(metric_name = "Pediatric Capnography", 
+qic_plot <- function(metric_name = "Neonatal Hypothermia", 
                      chart = "run", 
                      program_name = NULL) {
    

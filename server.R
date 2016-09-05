@@ -121,11 +121,7 @@ dag_name2 <- reactive({
 
   # average ------------------------------
   output$average <- renderInfoBox(
-<<<<<<< HEAD
       infoBox(title = "GAMUT Avg", 
-=======
-      infoBox(title = "GAMUT Rolling 12-month Avg", 
->>>>>>> master
               value = paste(total_count()$avg*100,"%"),
               icon = icon("star-half-full"))
   ) # end average
@@ -145,11 +141,11 @@ dag_name2 <- reactive({
   # data table ---------------------------- 
   output$data_table <- 
       renderDataTable(
-          qic_plot(input$metric_name)$data, # plot data
+          qic_plot(input$metric_name, program_name = input$program_name)$data, # plot data
           options = list(searching = FALSE, paging = FALSE, ordering = FALSE)
       )
 
-  # data table ---------------------------- 
+  # benchmark data table ---------------------------- 
   output$benchmark_table <- 
       renderDataTable(
           metric_comps(input$metric_name), #benchark data

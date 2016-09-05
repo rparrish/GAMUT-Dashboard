@@ -84,7 +84,7 @@ dashboardPage(
                  ),
              conditionalPanel(
                condition = "input.showdt == true", 
-                 box( dataTableOutput("data_table"), width = 6 )
+                 box( dataTableOutput("data_table"), width = 8 )
              ),
               conditionalPanel(
                condition = "input.showdt2 == true", 
