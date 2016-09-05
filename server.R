@@ -93,7 +93,7 @@ dag_name2 <- reactive({
   output$runchart <- renderPlot({
       #check if foo was passed, if it is add the UI elements
       query <- parseQueryString(session$clientData$url_search)
-      validate(need(!is.null(query$dag), "Please access via REDCap"))
+      #validate(need(!is.null(query$dag), "Please access via REDCap"))
       runchart_plot <- 
           qic_plot(input$metric_name, input$chart, program_name = input$program_name)
   })
@@ -112,9 +112,16 @@ dag_name2 <- reactive({
               value = total_count()$program_count)
   ) # end program count
  
+  # program ------------------------------
+  output$program <- renderInfoBox(
+      infoBox(title = "Program Avg", 
+              value = paste(total_count()$avg*100,"%"),
+              icon = icon("flag"))
+  ) # end average
+
   # average ------------------------------
   output$average <- renderInfoBox(
-      infoBox(title = "Rolling 12-month Avg", 
+      infoBox(title = "GAMUT Avg", 
               value = paste(total_count()$avg*100,"%"),
               icon = icon("star-half-full"))
   ) # end average
