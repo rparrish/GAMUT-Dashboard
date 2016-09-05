@@ -20,7 +20,9 @@ all_data <- dbGetQuery(con, "SELECT * FROM monthly_data;")
 
 #monthly_data <- all_data 
 
-metric_details <- dbGetQuery(con, "SELECT * FROM metric_details;")
+metric_details <- dbGetQuery(con, "SELECT * FROM metric_details;") %>%
+    filter(!measure_id %in% c("TM-1", "TM-2a", "TM-2b"))
+
 metadata <- dbGetQuery(con, "SELECT * FROM metadata;")
 
 dbDisconnect(con)
@@ -124,7 +126,7 @@ qic_data <- function(name = "Neonatal Capnography",
 }
         
 
-qic_plot <- function(metric_name = "Pediatric Capnography", 
+qic_plot <- function(metric_name = "Neonatal Hypothermia", 
                      chart = "run", 
                      program_name = NULL) {
    

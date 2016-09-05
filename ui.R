@@ -41,7 +41,7 @@ dashboardPage(
                      c("Runchart" = "run",
                        "SPC p-chart" = "p")),
         
-       #checkboxInput("showdt", "Show Data Table"),
+       checkboxInput("showdt", "Show Data Table"),
        #checkboxInput("showdt2", "Show Benchmark Table"),
 
         #HTML('<i class="fa fa-line-chart panelHeader"> Charts</i>'),
@@ -67,8 +67,9 @@ dashboardPage(
                 tabName = "graph_runchart", 
        h2(textOutput("dag")),
         fluidRow(
-            infoBoxOutput("average", width = 6),
-            infoBoxOutput("benchmark", width = 6)
+            infoBoxOutput("program", width = 4),
+            infoBoxOutput("average", width = 4),
+            infoBoxOutput("benchmark", width = 4)
         ),
         fluidRow(
 #             box(title = "qic",
@@ -83,7 +84,7 @@ dashboardPage(
                  ),
              conditionalPanel(
                condition = "input.showdt == true", 
-                 box( dataTableOutput("data_table"), width = 6 )
+                 box( dataTableOutput("data_table"), width = 8 )
              ),
               conditionalPanel(
                condition = "input.showdt2 == true", 
