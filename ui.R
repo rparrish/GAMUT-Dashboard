@@ -52,7 +52,12 @@ dashboardPage(
             HTML(paste("Data Refreshed:\n", 
                        metadata[metadata$key == "GAMUT_date_loaded", "value"]
                        ))
-        ) 
+        ),
+       tags$p(),
+       tags$a(href = "https://github.com/rparrish/GAMUT-Dashboard/issues",
+              target="_blank",
+              "Issues or Requests? Click here")
+       
        # Refresh data button 
        #actionButton("send_to_mysql", "Refresh data")
     ),
@@ -85,7 +90,7 @@ dashboardPage(
                condition = "input.showdt2 == true", 
                  box( dataTableOutput("benchmark_table"), width = 6 )
              )
-            ) 
+        )
              #   HTML("<font color='red'>{<em>Is there some explanatory text you'd like here?</em>}</font><br/>")  ), 
              ),
      tabItem(
