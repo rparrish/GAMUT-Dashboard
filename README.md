@@ -7,8 +7,8 @@ https://ampa.shinyapps.io/GAMUT_dashboard
 
 ## Roadmap
  - [x] Require Access via REDCap
- - [ ] Benchmarks
+ - [x] Benchmarks
  - [ ] Add comparison dotplots
  - [ ] Summary view (all metrics on one page)
- - [ ] Overall metric submission rates (heatmap)
+ - [x] Overall metric submission rates (heatmap)
  - [ ] migrate to flexdashboard
