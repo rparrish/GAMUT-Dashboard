@@ -2,9 +2,6 @@
 
 This is the dashboard used by the GAMUT Database
 
-https://ampa.shinyapps.io/GAMUT_dashboard
-
-
 ## Roadmap
  - [x] Require Access via REDCap
  - [x] Benchmarks
