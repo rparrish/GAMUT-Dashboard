@@ -124,6 +124,7 @@ benchmark <- function(name = "Neonatal Hypothermia",
     return(mean_top_pop$value)
 }
 
+
 qic_data <- function(name = "Neonatal Capnography", 
                      program_name  = NULL) {
     vars <- filter(metric_details, grepl(name, short_name)) %>%

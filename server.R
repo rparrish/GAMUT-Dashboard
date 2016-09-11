@@ -122,11 +122,13 @@ dag_name2 <- reactive({
   output$program <- renderInfoBox(
       infoBox(title = "Program Avg", 
               subtitle = "testing",
-              value = paste(total_count()$avg*100,"%"),
+              #fill = TRUE,
+              value = 20,#paste(
+                  #program_avg(input$metric_name, input$program_name),#$program_avg,#*100,"%"),
               icon = icon("flag"))
   ) # end average
 
-  # GAMUT average ------------------------------
+  # GAMUT average -----------------------------
   output$gamut_average <- renderInfoBox(
       infoBox(title = "GAMUT Avg", 
               #subtitle = "testing",
@@ -150,6 +152,22 @@ dag_name2 <- reactive({
 
 
   # data table ---------------------------- 
+output$program_month_table <- 
+    renderDataTable(
+        program_data(metric = input$metric_name, 
+                     program = input$program_name)$program_month_table,
+          options = list(searching = FALSE, paging = FALSE, ordering = FALSE, info = FALSE)
+
+    )
+
+
+output$program_avg_table <- 
+      renderDataTable(
+        program_data(metric = input$metric_name, 
+                     program = input$program_name)$program_avg_table,
+          options = list(searching = FALSE, paging = FALSE, ordering = FALSE, info = FALSE)
+      )
+
   output$data_table <- 
       renderDataTable(
           qic_plot(input$metric_name, program_name = input$program_name)$data %>%

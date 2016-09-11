@@ -116,7 +116,7 @@ dashboardPage(
                    box(width = 12, collapsible = FALSE,
                           title = "GAMUT Avg Table", 
                           dataTableOutput("gamut_avg_table")),
-                   box(width = 12, collapsible = TRUE,
+                   box(width = 12, collapsible = TRUE, collapsed = TRUE,
                           #title = "GAMUT Month Table", 
                           dataTableOutput("gamut_month_table"))
                   )
