@@ -24,38 +24,60 @@ metric_details <- dbGetQuery(con, "SELECT * FROM metric_details;") %>%
     filter(!measure_id %in% c("TM-1", "TM-2a", "TM-2b"))
 
 metadata <- dbGetQuery(con, "SELECT * FROM metadata;")
+refreshed <- difftime(Sys.time(), 
+                           as.Date(metadata[metadata$key == "GAMUT_date_loaded", "value"]),
+                           units = "mins") %>% as.numeric() #%>% format()
 
 dbDisconnect(con)
 
 metric_comps <- function(name = "Neonatal Capnography") {
     vars <- filter(metric_details, grepl(name, short_name)) %>%
         as.character()
-    
+   
+    #gamut_avg_table 
     comp_data <- 
         select_(all_data, .dots = c("month", vars[5:6])) %>%
         filter(.[, 2]/.[, 3] <= 1) %>%
         group_by(month) %>%
         summarise_each(funs(sum(., na.rm = TRUE))) %>%
-        filter(row_number() > n()-12) %>%
-        select(-month) %>%
-        summarize_each(funs(sum)) %>%
+        filter(row_number() > n()-14 & row_number() < n()-1) %>%
+        #select(-month) %>%
+        #summarize_each(funs(sum)) %>%
         data.frame()
 
-    comp_data$avg <- round(comp_data[, 1]/comp_data[, 2],2)
+    #comp_data$avg <- round(comp_data[, 1]/comp_data[, 2],2)
+    comp_data$avg <- round(comp_data[, 2]/comp_data[, 3],2)
+   
+    # gamut_avg_table
+    gamut_avg_table <- comp_data %>%
+        select(-month) %>%
+        summarize_each(funs(sum)) %>%
+        mutate(avg = round(.[,1]/.[,2],2)) %>%
+        data.frame()
+    # gamut_avg
+    gamut_avg <- gamut_avg_table$avg 
     
-    comp_data$benchmark <- "Under construction"
+    # abc_benchmark
+    abc_benchmark <- "under construction"
 
-    return(comp_data)
+
+    results <- list(gamut_month_table = comp_data,
+                    gamut_avg_table = gamut_avg_table, 
+                    gamut_avg = gamut_avg) 
+   
+    return(results)
     
 }
 
 
 # calculate the target benchmark for the specified metric
+bench_start_date <- lubridate::floor_date(Sys.Date()-(60+365), unit = "month")
+bench_end_date <- lubridate::floor_date(Sys.Date()-60, unit = "month")
 
 benchmark <- function(name = "Neonatal Hypothermia", 
                       #method = list("mean_top_pop", "top_decile"),
-                      bench_start = "2015-01-01", 
-                      bench_end = "2015-12-01") {
+                      bench_start = bench_start_date, 
+                      bench_end =  bench_end_date) {
     vars <- filter(metric_details, grepl(name, short_name)) %>%
         as.character()
     
@@ -63,9 +85,9 @@ benchmark <- function(name = "Neonatal Hypothermia",
         select_(all_data, .dots = c("month", "program_name", vars[c(5:6)])) %>%
         select(month, program_name, num = 3, den = 4) %>%
         filter(num/den <= 1) %>%
-        filter(as.Date(month) >= as.Date(bench_start), 
+        filter(as.Date(month) >= as.Date("2014-05-01"), #bench_start), 
                as.Date(month) <= as.Date(bench_end)) %>%
-        #filter(substr(month,1,4) == "2015") %>%
+        filter(substr(month,1,4) == "2015") %>%
         group_by(program_name) %>%
         summarize(n = n(), 
                   numerator = sum(num), 
@@ -126,15 +148,16 @@ qic_data <- function(name = "Neonatal Capnography",
 }
         
 
-qic_plot <- function(metric_name = "Neonatal Hypothermia", 
+qic_plot <- function(metric_name = NULL, 
                      chart = "run", 
                      program_name = NULL) {
-   
+    par(mar = c(5, 4, 4, 2) + 0.1)
+    
     qd <- qic_data(metric_name, program_name = program_name) 
     names(qd) <- c("program_name", "month", "y", "n", "metric") 
-    
+
     target <- 
-        benchmark(name = metric_name) %>%
+        benchmark(name = metric_name, bench_start_date, bench_end_date) %>%
         round(., 3)
     
     if(nrow(qd) >= 6) {
@@ -156,11 +179,11 @@ qic_plot <- function(metric_name = "Neonatal Hypothermia",
         #ylab = paste(total_count()$metric_ylab),
         #ylim = c(0,100),
         cex = 1.0,
-        las = 2,
+        las = 1,
         nint = 3,
         #freeze = 12,
         print.out = TRUE,
-        plot.chart = TRUE 
+        plot.chart = TRUE, 
         #runvals = TRUE
         #sub = "subtitle"
         

@@ -7,10 +7,11 @@
 
 # load functions
 
+library(GAMUT)
 source("functions.R")
-source("R/send_to_mysql.R")
+#source("R/send_to_mysql.R")
 
-# metric data (static) ------------------
+# metric data (static#) ------------------
 # 
 # mydata_agg_static <-  
 #     monthly_data %>%
@@ -85,15 +86,18 @@ dag_name2 <- reactive({
     })
     
 # refresh data -----------------------------
-    observeEvent(input$send_to_mysql, {
-        send_to_mysql()
-    })
+
+    if(refreshed > 3) {
+    #observeEvent(input$send_to_mysql, {
+        #send_to_mysql()
+    }
+    #})
 # runchart -----------------------------
 
   output$runchart <- renderPlot({
       #check if foo was passed, if it is add the UI elements
       query <- parseQueryString(session$clientData$url_search)
-      #validate(need(!is.null(query$dag), "Please access via REDCap"))
+      validate(need(!is.null(query$dag), "Please access via REDCap"))
       runchart_plot <- 
           qic_plot(input$metric_name, input$chart, program_name = input$program_name)
   })
@@ -111,24 +115,31 @@ dag_name2 <- reactive({
       infoBox(title = "Total Programs", 
               value = total_count()$program_count)
   ) # end program count
- 
-  # program ------------------------------
+
+# Benchmarks -----
+
+  # Program average ------------------------------
   output$program <- renderInfoBox(
       infoBox(title = "Program Avg", 
+              subtitle = "testing",
               value = paste(total_count()$avg*100,"%"),
               icon = icon("flag"))
   ) # end average
 
-  # average ------------------------------
-  output$average <- renderInfoBox(
+  # GAMUT average ------------------------------
+  output$gamut_average <- renderInfoBox(
       infoBox(title = "GAMUT Avg", 
-              value = paste(total_count()$avg*100,"%"),
+              #subtitle = "testing",
+              value =  paste(metric_comps(input$metric_name)$gamut_avg*100,"%"),
+              href = "http://127.0.0.1:6123/#shiny-tab-testing",
+              fill = TRUE,
               icon = icon("star-half-full"))
   ) # end average
 
-  # benchmark ------------------------------
+  # benchmark ----------------------------- 
   output$benchmark <- renderInfoBox(
-      infoBox(title = "Achievable Benchmark of Care (ABC)", 
+      infoBox(title = "Benchmark (ABC)", 
+              subtitle = "testing",
               value = paste0(round(benchmark(input$metric_name),3)*100,"%"),
               icon  = icon("flag-checkered"))
   ) # end benchmark
@@ -141,15 +152,23 @@ dag_name2 <- reactive({
   # data table ---------------------------- 
   output$data_table <- 
       renderDataTable(
-          qic_plot(input$metric_name, program_name = input$program_name)$data, # plot data
+          qic_plot(input$metric_name, program_name = input$program_name)$data %>%
+              rename(`Program Name` = program_name, `Month` = month, 
+                     `Numerator` = y, `Denominator` = n, `Rate` = metric ), # plot data
           options = list(searching = FALSE, paging = FALSE, ordering = FALSE)
       )
 
-  # benchmark data table ---------------------------- 
-  output$benchmark_table <- 
+  # benchmark data tables ---------------------------- 
+  output$gamut_month_table <- 
       renderDataTable(
-          metric_comps(input$metric_name), #benchark data
-          options = list(searching = FALSE, paging = FALSE, ordering = FALSE)
+          metric_comps(input$metric_name)$gamut_month_table, #GAMUT monthly data table
+          options = list(searching = FALSE, paging = FALSE, ordering = FALSE, info = FALSE)
+      )
+
+  output$gamut_avg_table <- 
+      renderDataTable(
+          metric_comps(input$metric_name)$gamut_avg_table, #GAMUT Average table
+          options = list(searching = FALSE, paging = FALSE, ordering = FALSE, info = FALSE)
       )
 
   # client data ---------------------------- 
