@@ -82,9 +82,9 @@ dashboardPage(
                    fluidRow(box(width = NULL, collapsible = TRUE, solidHeader = TRUE, 
                                 title = "this section is still in development", #height = 100,
                         ## infoboxes 
-                        infoBoxOutput("program", width = 4),
-                        infoBoxOutput("gamut_average", width = 4),
-                        infoBoxOutput("benchmark", width = 4),
+                        #infoBoxOutput("program", width = 4),
+                        infoBoxOutput("gamut_average", width = 6),
+                        infoBoxOutput("benchmark", width = 6),
                         HTML(paste("Rolling 12-months including ", format(bench_end_date-1, "%b %Y")))
                         )), 
                     fluidRow(
