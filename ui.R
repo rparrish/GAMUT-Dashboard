@@ -40,11 +40,11 @@ dashboardPage(
         #HTML('<i class="fa fa-line-chart panelHeader"> Charts</i>'),
         sidebarMenu(
             menuItem("Runchart", tabName="graph_runchart", icon = icon("line-chart")),
-            menuItem("benchmark_testing", tabName="testing", icon = icon("line-chart")),
+            #menuItem("benchmark_testing", tabName="testing", icon = icon("line-chart")),
             #menuItem("Measure Definitions", tabName="information", icon = icon("book")),
             #menuItem("Resources", tabName="general_links"), 
             HTML(paste("Data Refreshed:<BR>\n",
-                       refreshed, 
+                       #refreshed, 
                        "<BR>",
                        metadata[metadata$key == "GAMUT_date_loaded", "value"]
                        ))
@@ -79,14 +79,18 @@ dashboardPage(
             tabItem(tabName = "graph_runchart", 
                    #h2(textOutput("dag")),
 
-                   fluidRow(box(width = NULL, collapsible = TRUE, solidHeader = TRUE, 
-                                title = "this section is still in development", #height = 100,
+                   fluidRow(
+                       #box(width = NULL, collapsible = TRUE, solidHeader = TRUE, 
+                       #         title = "this section is still in development", #height = 100,
                         ## infoboxes 
                         #infoBoxOutput("program", width = 4),
                         infoBoxOutput("gamut_average", width = 6),
-                        infoBoxOutput("benchmark", width = 6),
-                        HTML(paste("Rolling 12-months including ", format(bench_end_date-1, "%b %Y")))
-                        )), 
+                        infoBoxOutput("benchmark", width = 6)
+                        #HTML(paste("Rolling 12-months from ", 
+                        #           format(bench_start_date, "%b %Y"), " to ", 
+                        #           format(bench_end_date, "%b %Y")))
+                        #)
+                   ), 
                     fluidRow(
                         ## chart box
                         box(width = 12, collapsible = FALSE,
