@@ -158,7 +158,8 @@ dashboardPage(
                     "    <tr><td><A HREF='https://github.com/rparrish/GAMUT-Dashboard'>GitHub</A></td><td> - </td><td>GAMUT Dashboard code repository</td></tr>",
                     "  </table>",
                     "</font>" 
-                    ),  
+                    ), 
+                
                 verbatimTextOutput("clientdataText") # debugging output 
                 )
         ) #End the tabsetPanel

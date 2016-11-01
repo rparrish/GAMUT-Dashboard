@@ -36,16 +36,18 @@ shinyServer(function(input, output, session) {
 
 # program select --------------------------
 output$program_name <- renderUI({
-
-        
     selectInput(
     inputId = "program_name",
     label = "Program Name",
     choices = { 
         programs <- all_data
-        if(dag_name2() != "") {
-        programs <- filter(programs, redcap_data_access_group == dag_name2()) %>%
+        if(!is.null(url_query()$dag) && url_query()$dag != "") {
+        programs <- filter(programs, redcap_data_access_group == url_query()$dag) %>%
             droplevels()
+        } 
+        if(!is.null(url_query()$org) && url_query()$org != "") {
+            programs <- filter(programs, substring(program_name, 1, 3) == url_query()$org) %>%
+                droplevels()
         }
         
         levels(as.factor(programs$program_name))
@@ -64,11 +66,18 @@ output$program_name <- renderUI({
  
 dag_name2 <- reactive({
     url_search <- session$clientData$url_search 
-    dag <- substring(url_search, 6)
+    dag <- substring(url_search, 13)
     dag_name <- URLdecode(dag) 
     paste(dag_name)
 })
-    
+
+url_query <- reactive({
+    url_search <- session$clientData$url_search
+    results <- httr::parse_url(url_search)$query
+    results
+})    
+
+
 # counts ---------------------------------
     total_count <- reactive({
         comps <- metric_comps(input$metric_name) 
@@ -219,12 +228,13 @@ output$program_avg_table <-
   # get the DAG from clientData
   output$dag <- renderText({
       url_search <- session$clientData$url_search 
-      dag <- substring(url_search, 6)
+      dag <- substring(url_search, 13)
       dag_name <- URLdecode(dag) 
       paste(dag_name)
       
       
   })
+  
   output$DAG <- renderInfoBox({      
       infoBox(title = "Benchmark",  
               value = dag_name2(),
