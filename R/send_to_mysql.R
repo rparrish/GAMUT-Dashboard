@@ -46,9 +46,18 @@ send_to_mysql <- function() {
             raw_or_label = "label"
         )$data
     )
-    
+
+    MTr_data <- tbl_df(
+        redcap_read_oneshot(
+            redcap_uri = uri,
+            token = MTr_token,
+            export_data_access_groups = TRUE,
+            raw_or_label = "label"
+        )$data
+    )
+        
     redcap_data <-
-        bind_rows(GAMUT_data, AIM_data, AEL_data)
+        bind_rows(GAMUT_data, AIM_data, AEL_data, MTr_data)
     
     metadata <-
         data.frame(key = c("GAMUT_date_loaded"),
