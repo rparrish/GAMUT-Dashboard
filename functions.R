@@ -123,56 +123,58 @@ qic_data <- function(name = "Neonatal Capnography",
     
 }
         
-
-qic_plot <- function(metric_name = "Pediatric Capnography", 
-                     chart = "run", 
-                     program_name = NULL) {
-   
-    qd <- qic_data(metric_name, program_name = program_name) 
-    names(qd) <- c("program_name", "month", "y", "n", "metric") 
+qic_plot <- function(metric_name = NULL,
+                     chart = "run",
+                     program_name = NULL,
+                     target = .911) {
+    par(mar = c(5, 4, 4, 2) + 0.1)
     
-    target <- 
-        benchmark(name = metric_name) %>%
-        round(., 3)
+    qd <- qic_data(metric_name, program_name = program_name)
+    names(qd) <- c("program_name", "month", "y", "n", "metric")
+    
+    #target <-
+    #benchmark(name = metric_name, bench_start_date, bench_end_date) %>%
+    #round(., 3)
     
     if(nrow(qd) >= 6) {
-    plot_result <- 
-        qic(
-        y = y, #unintended_hypothermia, 
-        n = n, 
-        x = month,
-        x.format = "%b %Y",
-        main = paste(program_name, ": ", metric_name), 
-        direction = 1, 
-        data = qd,
-        chart = chart,
-        multiply = 100,
-        target = target,
-        llabs = c("LCL", "CL", "UCL", "Bench"),
-        xlab = "",
-        ylab = "Percent",
-        #ylab = paste(total_count()$metric_ylab),
-        #ylim = c(0,100),
-        cex = 1.0,
-        las = 2,
-        nint = 3,
-        #freeze = 12,
-        print.out = TRUE,
-        plot.chart = TRUE 
-        #runvals = TRUE
-        #sub = "subtitle"
-        
-        ) } else {
+        plot_result <-
+            qic(
+                y = y, #unintended_hypothermia,
+                n = n,
+                x = month,
+                x.format = "%b %Y",
+                main = paste(program_name, ": ", metric_name),
+                direction = 1,
+                data = qd,
+                chart = chart,
+                multiply = 100,
+                target = target,
+                llabs = c("LCL", "Median", "UCL", "Bench"),
+                xlab = "",
+                ylab = "Percent",
+                #ylab = paste(total_count()$metric_ylab),
+                #ylim = c(0,100),
+                cex = 1.0,
+                las = 1,
+                nint = 3,
+                #freeze = 12,
+                print.out = TRUE,
+                plot.chart = TRUE
+                #runvals = TRUE
+                #sub = "subtitle"
+                
+            ) } else {
                 #  http://stackoverflow.com/questions/19918985/r-plot-only-text
                 plot(c(0, 1), c(0, 1), ann = F, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n')
-                text(x = 0.5, y = 0.5, paste("Insufficient data"), 
-                 cex = 1.6, col = "black")
-        }
-   
+                text(x = 0.5, y = 0.5, paste("Insufficient data"),
+                     cex = 1.6, col = "black")
+            }
+    
     results <- list(data = qd)
     invisible(results)
     
 }
+
 
 
     

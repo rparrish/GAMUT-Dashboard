@@ -20,6 +20,8 @@ dashboardPage(
     skin = "blue",
     header = header,
     dashboardSidebar(
+        sidebarMenu(
+            menuItem("Runchart", tabName="graph_runchart", icon = icon("line-chart")),
         #HTML('<i class="fa fa-filter panelHeader"> Filters</i>'),
         
          # selectInput(
@@ -37,18 +39,16 @@ dashboardPage(
             choices = metric_details$short_name,
             selectize = FALSE
         ),
-       radioButtons("chart", "Chart type:",
-                     c("Runchart" = "run",
-                       "SPC p-chart" = "p")),
+       #radioButtons("chart", "Chart type:",
+       #             c("Runchart" = "run",
+       #               "SPC p-chart" = "p")),
         
-       #checkboxInput("showdt", "Show Data Table"),
+       checkboxInput("showdt", "Show Data Table"),
        #checkboxInput("showdt2", "Show Benchmark Table"),
 
         #HTML('<i class="fa fa-line-chart panelHeader"> Charts</i>'),
-        sidebarMenu(
-            menuItem("Chart", tabName="graph_runchart", icon = icon("line-chart")),
-            menuItem("Measure Definitions", tabName="information", icon = icon("book")),
-            menuItem("Resources", tabName="general_links"), 
+            #menuItem("Measure Definitions", tabName="information", icon = icon("book")),
+            #menuItem("Resources", tabName="general_links"), 
             HTML(paste("Data Refreshed:\n", 
                        metadata[metadata$key == "GAMUT_date_loaded", "value"]
                        ))
@@ -82,12 +82,12 @@ dashboardPage(
                 width = 12
                  ),
              conditionalPanel(
-               condition = "input.showdt == true", 
+               condition = "input.showdt1 == true", 
                  box( dataTableOutput("data_table"), width = 6 )
              ),
               conditionalPanel(
-               condition = "input.showdt2 == true", 
-                 box( dataTableOutput("benchmark_table"), width = 6 )
+               condition = "input.showdt == true", 
+                 box( DT::dataTableOutput("dt_data_table"), width = 8)
              )
         )
              #   HTML("<font color='red'>{<em>Is there some explanatory text you'd like here?</em>}</font><br/>")  ), 

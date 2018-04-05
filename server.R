@@ -95,7 +95,8 @@ dag_name2 <- reactive({
       query <- parseQueryString(session$clientData$url_search)
       validate(need(!is.null(query$dag), "Please access via REDCap"))
       runchart_plot <- 
-          qic_plot(input$metric_name, input$chart, program_name = input$program_name)
+          qic_plot(input$metric_name, input$chart, 
+                   program_name = input$program_name, target = round(benchmark(input$metric_name),3))
   })
  
   # patient count -------------------------
@@ -134,9 +135,31 @@ dag_name2 <- reactive({
   # data table ---------------------------- 
   output$data_table <- 
       renderDataTable(
-          qic_plot(input$metric_name)$data, # plot data
-          options = list(searching = FALSE, paging = FALSE, ordering = FALSE)
+          qic_plot(input$metric_name, input$chart, 
+                   program_name = input$program_name, target = round(benchmark(input$metric_name),3))$data, # plot data
+          options = list(searching = FALSE, paging = FALSE, ordering = FALSE,
+                         columns = list(
+                             list(title = 'Program Name'),
+                             list(title = 'Month'),
+                             list(title = 'Numerator'),
+                             list(title = 'Denominator'),
+                             list(title = 'Rate')))
       )
+  # data table ---------------------------- 
+  output$dt_data_table <- 
+      DT::renderDataTable({
+          metric_table <- qic_plot(input$metric_name, input$chart, 
+                                   program_name = input$program_name, 
+                                   target = round(benchmark(input$metric_name),3))$data
+          
+          DT::datatable(metric_table, 
+                        colnames = c("Program Name", "Month", "Numerator", "Denominator", "Rate"), 
+                        rownames = FALSE,
+                        options = list(
+                            dom = "tp")
+                        ) %>%
+              DT::formatPercentage('metric', 1)
+      })
 
   # data table ---------------------------- 
   output$benchmark_table <- 
