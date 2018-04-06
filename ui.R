@@ -43,7 +43,7 @@ dashboardPage(
        #             c("Runchart" = "run",
        #               "SPC p-chart" = "p")),
         
-       checkboxInput("showdt", "Show Data Table"),
+       checkboxInput("showdt", "Show Data Table", value = TRUE),
        #checkboxInput("showdt2", "Show Benchmark Table"),
 
         #HTML('<i class="fa fa-line-chart panelHeader"> Charts</i>'),
@@ -67,7 +67,7 @@ dashboardPage(
                 tabName = "graph_runchart", 
        h2(textOutput("dag")),
         fluidRow(
-            infoBoxOutput("average", width = 6),
+            infoBoxOutput("gamut_average", width = 6),
             infoBoxOutput("benchmark", width = 6)
         ),
         fluidRow(
@@ -82,12 +82,12 @@ dashboardPage(
                 width = 12
                  ),
              conditionalPanel(
-               condition = "input.showdt1 == true", 
-                 box( dataTableOutput("data_table"), width = 6 )
+               condition = "input.showdt == true", 
+                 box( DT::dataTableOutput("dt_data_table"), width = 6 )
              ),
               conditionalPanel(
-               condition = "input.showdt == true", 
-                 box( DT::dataTableOutput("dt_data_table"), width = 8)
+               condition = "input.showdt2 == true", 
+                 box( dataTableOutput("benchmark_table"), width = 6 )
              )
         )
              #   HTML("<font color='red'>{<em>Is there some explanatory text you'd like here?</em>}</font><br/>")  ), 
